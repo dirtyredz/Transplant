@@ -14,7 +14,7 @@ namespace Transplant
         public const string PluginName = "Transplant";
         // Keep in step with <Version> in the csproj - pack.ps1 names the archive from that one
         // and BepInEx reports this one. See 12-versioning-and-release.md.
-        public const string PluginVersion = "0.1.3";
+        public const string PluginVersion = "0.1.4";
 
         private Harmony harmony;
 
@@ -24,6 +24,7 @@ namespace Transplant
 
             harmony = new Harmony(PluginGuid);
             harmony.PatchAll(typeof(DecorateStatePatches));
+            harmony.PatchAll(typeof(DecorateStateProbe));
             harmony.PatchAll(typeof(SelectStatePatches));
             harmony.PatchAll(typeof(CanMoveGridViewPatch));
             harmony.PatchAll(typeof(CancelPatch));
@@ -79,7 +80,7 @@ namespace Transplant
                     MovingSection, "ModMenu.Label=Enable moving plants"));
 
             RequireModifier = config.Bind(
-                "Moving", "RequireModifier", true,
+                "Moving", "RequireModifier", false,
                 new ConfigDescription(
                     "Require the key below. Off makes plants always movable in decorate mode.",
                     null,

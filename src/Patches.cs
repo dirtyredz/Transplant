@@ -54,6 +54,24 @@ namespace Transplant
     }
 
     /// <summary>
+    /// Pure visibility. Every decorate state derives from BaseDecorateState and routes through
+    /// this, so one line per state type proves which of them actually run.
+    ///
+    /// 0.1.3 produced a session log with no decorate lines at all, which left "the player never
+    /// opened decorate mode" and "the states we hook are not the ones this game uses"
+    /// indistinguishable. This settles that without another round of guessing.
+    /// </summary>
+    [HarmonyPatch(typeof(BaseDecorateState), "OnActivate")]
+    internal static class DecorateStateProbe
+    {
+        [HarmonyPostfix]
+        internal static void Postfix(BaseDecorateState __instance)
+        {
+            Diagnostics.DecorateStateEntered(__instance?.GetType().Name);
+        }
+    }
+
+    /// <summary>
     /// Makes the arming key actually do something the moment it is pressed.
     ///
     /// DecorateSelectState.ProcessSelection returns immediately unless the cursor moved this

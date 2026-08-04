@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -23,6 +24,33 @@ namespace Transplant
         private static Vector3Int lastColumn = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
         private static string lastVerdictKey;
         private static string lastPlacementKey;
+        private static readonly HashSet<string> seenStates = new HashSet<string>();
+
+        /// <summary>
+        /// One line the first time each decorate state runs. Also the place that reports the
+        /// arming setup, so a log always carries enough to know what the mod was configured to
+        /// do without asking the player to find the config file.
+        /// </summary>
+        internal static void DecorateStateEntered(string stateName)
+        {
+            if (string.IsNullOrEmpty(stateName) || seenStates.Contains(stateName))
+            {
+                return;
+            }
+
+            seenStates.Add(stateName);
+
+            if (seenStates.Count == 1)
+            {
+                Plugin.Log.LogInfo(Plugin.RequireModifier.Value
+                    ? $"Decorate state '{stateName}'. Arming needs {Plugin.Modifier.Value.MainKey} " +
+                      $"({(Plugin.PressToToggle.Value ? "press to toggle" : "hold")})."
+                    : $"Decorate state '{stateName}'. No key needed - plants are movable now.");
+                return;
+            }
+
+            Plugin.Log.LogInfo($"Decorate state '{stateName}'.");
+        }
 
         internal static void Considered(IGridObjectView gridObjectView)
         {
@@ -211,6 +239,7 @@ namespace Transplant
             lastConsideredAt = -99f;
             lastAllowedName = null;
             lastPlacementKey = null;
+            seenStates.Clear();
             lastColumn = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
             lastVerdictKey = null;
         }

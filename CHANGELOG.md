@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.4 — 2026-08-04
+
+**No key is needed any more.** `RequireModifier` now defaults to false, so plants are movable
+whenever decorate mode is open.
+
+The arming key has been the cause of two consecutive failures — first a hold-vs-tap race, then
+a toggle that made things worse — and it was never part of the request. It was a safety feature
+this mod added on its own. Taking it off the critical path removes the whole class of problem
+at once: no key conflict, no timing window, and no dependence on the key reaching the mod at
+all. `RequireModifier = true` still restores it for anyone who wants the guard.
+
+- **Added a probe on `BaseDecorateState.OnActivate`.** Every decorate state derives from it, so
+  the log now names each one as it runs. The 0.1.3 session produced no decorate lines
+  whatsoever, which left "the player never opened decorate mode" and "these are not the states
+  this game uses" impossible to tell apart.
+- The first decorate line now also reports the arming configuration, so a log is
+  self-describing without anyone having to go and read the config file.
+
 ## 0.1.3 — 2026-08-04
 
 Selection is confirmed working — the log shows a grape vine found, gated and marked movable.
