@@ -40,6 +40,25 @@ method, and the game's own decorate selection already does the hover work.
 - [research/01-moving-growables.md](research/01-moving-growables.md) — the decorate-mode gate,
   what survives a move and what doesn't, the two traps, and the four questions still open.
 
+## Layout
+
+Sources and the project file go **directly in `src/`** — there is no `src/Transplant/`
+subfolder:
+
+```
+Directory.Build.props
+src/
+  Transplant.csproj
+  Plugin.cs
+  ...
+```
+
+This matches Last Swing, Coffin Break and Bigger UI. Chest Labels and Plant Peek still carry
+an older `src/<ModName>/` nesting — **don't copy those two when scaffolding.** The flattening
+is on disk only: the csproj still sets `AssemblyName`/`RootNamespace` to `Transplant` and
+deploys to `BepInEx\plugins\MoonlightPeaksMods\Transplant`, so the built artifact is
+unchanged.
+
 ## Planned guarantees
 
 - **Save-safe.** No sidecar file and no new persistence type — the mod only lets the game's
