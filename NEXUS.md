@@ -135,8 +135,8 @@ Files live in `screenshots/`. The thumbnail is set separately in the upload form
 
 | # | Shot | File | Status |
 |---|---|---|---|
-| - | Thumbnail, **16:9** | `thumbnail.png` | ⬜ to make |
-| - | Title banner | `banner.png` | ⬜ optional |
+| - | Thumbnail, **16:9** | `thumbnail.png` | ✅ 1672x941 (1.777) — exact; all four text elements proofread at 4–8x |
+| - | Title banner | `banner.png` | ✅ 2358x667 (3.54) — same ratio as Coffin Break's |
 | 1 | A crop lifted mid-move, cursor valid, farm visible | `01-moving-a-crop.png` | ✅ 541x455 |
 | 2 | The refusal - plant over bare ground, invalid cursor, shout visible | `02-needs-soil.png` | ⬜ wanted, not blocking |
 | 3 | Before/after of a row straightened | `03-row-fixed.png` | ⬜ to capture |
@@ -162,6 +162,34 @@ straight reads as no change at all.
 
 Grapes are the best subject — a trellis is tall, unmistakable, and obviously a thing you would
 not want to replant.
+
+### ⚠️ The art says "Grow Anywhere." The mod says the opposite.
+
+Both the thumbnail and the banner carry the ribbon **"Move It. Replant It. Grow Anywhere."**
+The third clause is the one claim this mod deliberately does not make. Its core safety feature is
+refusing to place a plant where it could never be watered, and the description three paragraphs
+up says so in as many words:
+
+> Transplant will not place a plant anywhere it could never be watered
+
+This is a sharper version of the mismatch Coffin Break documented — there, the banner said "pause
+the game" when the mod stops the clock, which merely undersold it. Here the art promises the
+opposite of a guard rail. A player who reads "Grow Anywhere", turns off `RequireSoil` and strands
+a crop was invited to do that by the thumbnail.
+
+**Preferred fix: regenerate the ribbon text only.** Same art, and any of these is accurate:
+
+- `Move It. Replant It. Keep Its Growth.` — matches the subtitle beneath it
+- `Move It. Replant It. Nothing Lost.`
+- `Move It. Replant It. Growth Intact.`
+
+**If it ships as-is**, that is a defensible call — it is three words on a tile, and the
+description does the real work — but say so deliberately rather than by not noticing. The
+feature list already leads with the refusal, which limits the damage.
+
+Everything else about both images is good: the palette matches
+[10-visual-integration.md](../../10-visual-integration.md), the grape-vine-in-transit motif reads
+instantly, and the lettering is clean under magnification.
 
 ### Thumbnail must be composed at 16:9
 

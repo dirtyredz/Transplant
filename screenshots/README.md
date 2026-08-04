@@ -10,8 +10,8 @@ Drop captures here. Full reasoning, thumbnail ratio and art direction live in
 | 3 | `03-row-fixed.png` | A crooked row, then the same row straightened | ⬜ optional |
 | 4 | `04-wild-plants.png` | A wild tree selected, showing the opt-in `IncludeWildPlants` feature | ✅ 641x517 |
 | 5 | `05-settings.png` | Settings panel *(optional)* | ⬜ optional |
-| - | `thumbnail.png` | Composed at **16:9**, e.g. 1672x941 | ⬜ to make |
-| - | `banner.png` | Title banner *(optional)*, ratio only roughly matters | ⬜ optional |
+| - | `thumbnail.png` | Composed at **16:9**, e.g. 1672x941 | ✅ 1672x941 exact — see the "Grow Anywhere" note in NEXUS.md |
+| - | `banner.png` | Title banner *(optional)*, ratio only roughly matters | ✅ 2358x667 |
 
 ### On the two captured so far
 
