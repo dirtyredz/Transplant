@@ -90,6 +90,32 @@ namespace Transplant
                 ___forceUpdate = true;
             }
         }
+
+        /// <summary>
+        /// Probe: what the game actually finds in the column under the cursor.
+        ///
+        /// A grape vine produced no gate log line at all, which means the gate was never asked
+        /// about it - the selection gave up first. This says whether the vine is even a
+        /// candidate, which separates "not registered at the cell the cursor is over" from
+        /// "found but rejected".
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch("GetLowestMovableObjectAtColumn")]
+        internal static void AfterColumn(GridSurface grid, int x, int y, int z, IGridObjectView __result)
+        {
+            Diagnostics.Column(grid, x, y, z, __result);
+        }
+
+        /// <summary>
+        /// Probe: the game's own gate, which runs two checks of its own before it consults ours
+        /// and returns early on either.
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch("CanMoveGridObject")]
+        internal static void AfterCanMove(IGridObjectView gridObjectView, bool __result)
+        {
+            Diagnostics.Verdict(gridObjectView, __result);
+        }
     }
 
     /// <summary>

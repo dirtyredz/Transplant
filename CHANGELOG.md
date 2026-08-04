@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.2 — 2026-08-04
+
+The 0.1.1 log showed the machinery working — decorate mode detected, key detected, gate
+consulted — while a grape vine still could not be selected. Two separate problems.
+
+- **Wild plants were not being excluded.** `Item_Wild_Vegetation_Weeds_5` was offered as
+  movable with `IncludeWildPlants` off, because the filter tested
+  `ItemAsset.VegetationAddon` and weeds are plain growables with no vegetation addon. Now uses
+  `GrowablePersistence.IsPlayerPlanted`, the flag the game itself keeps.
+- **Added probes above our own gate.** The vine produced no log line at all, meaning the game's
+  selection gave up before consulting us — and nothing shipped so far could see that far up.
+  Two postfixes now report what the game finds in the column under the cursor, and the game's
+  own verdict on each growable including the two checks it makes before reaching ours.
+
+Still not confirmed working. This release is aimed at making the vine's failure legible.
+
 ## 0.1.1 — 2026-08-04
 
 Fixes the reason 0.1.0 appeared to do nothing at all.

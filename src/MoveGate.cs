@@ -152,12 +152,41 @@ namespace Transplant
                 return false;
             }
 
-            if (!Plugin.IncludeWildPlants.Value && itemAsset.VegetationAddon != null)
+            if (!Plugin.IncludeWildPlants.Value && !IsPlayerPlanted(gridObjectView))
             {
                 return false;
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Whether the player planted this, as opposed to the world growing it.
+        ///
+        /// The obvious test - ItemAsset.VegetationAddon != null - is wrong, and the log proved
+        /// it: Item_Wild_Vegetation_Weeds_5 sailed straight through it and was offered as
+        /// movable. Weeds are plain growables with no vegetation addon. GrowablePersistence
+        /// carries the flag the game itself uses.
+        ///
+        /// Find() rather than FindOrCreate(), which would write a growable record for anything
+        /// the cursor passed over.
+        /// </summary>
+        internal static bool IsPlayerPlanted(IGridObjectView gridObjectView)
+        {
+            var persistence = gridObjectView?.GridObjectPersistence;
+            if (persistence == null)
+            {
+                return false;
+            }
+
+            var gamePersistence = GamePersistence.Instance;
+            if (gamePersistence == null || gamePersistence.CurrentRoom == null)
+            {
+                return false;
+            }
+
+            var growable = gamePersistence.CurrentRoom.Growables.Find(persistence.Guid);
+            return growable != null && growable.IsPlayerPlanted;
         }
     }
 }
