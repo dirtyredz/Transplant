@@ -137,10 +137,11 @@ Files live in `screenshots/`. The thumbnail is set separately in the upload form
 |---|---|---|---|
 | - | Thumbnail, **16:9** | `thumbnail.png` | ⬜ to make |
 | - | Title banner | `banner.png` | ⬜ optional |
-| 1 | A crop lifted mid-move, cursor valid, farm visible | `01-moving-a-crop.png` | ⬜ to capture |
+| 1 | A crop lifted mid-move, cursor valid, farm visible | `01-moving-a-crop.png` | ✅ 541x455 |
 | 2 | The refusal — plant over bare ground, invalid cursor, shout visible | `02-needs-soil.png` | ⬜ to capture |
 | 3 | Before/after of a row straightened | `03-row-fixed.png` | ⬜ to capture |
-| 4 | Mod Menu settings panel *(optional)* | `04-settings.png` | ⬜ optional |
+| 4 | A wild tree selected - the opt-in IncludeWildPlants feature | `04-wild-plants.png` | ✅ 641x517 |
+| 5 | Settings panel *(optional)* | `05-settings.png` | ⬜ optional |
 
 **Shot 2 is the one that sells it, not shot 1.** Anyone can claim "move your plants"; the shout
 reading *"It needs watered ground."* over an invalid placement is the visible proof that the mod
