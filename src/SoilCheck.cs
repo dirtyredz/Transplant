@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Chicken.Utilities;
 using UnityEngine;
 
@@ -37,6 +38,81 @@ namespace Transplant
         private static Vector2Int cachedCell;
         private static int cachedFrame = -1;
         private static bool cachedResult;
+
+        // Keyed by ItemAsset, because whether a plant can ever need water is a property of the
+        // asset rather than of the individual plant.
+        private static readonly Dictionary<ItemAsset, bool> needsWaterCache =
+            new Dictionary<ItemAsset, bool>();
+
+        /// <summary>
+        /// Whether this kind of plant can ever be gated on watering.
+        ///
+        /// The soil rule exists to stop a plant being stranded somewhere its water requirement
+        /// can never be satisfied. A plant with no water requirement anywhere in its grow graph
+        /// has nothing to strand, so applying the rule to it would refuse perfectly good
+        /// placements for no reason - which is exactly what would happen to wild trees and
+        /// bushes, since they grow through WildTreeGrowStageRequirement and are not watered.
+        ///
+        /// Enumerating the requirement components is safe. Evaluating them is not:
+        /// RandomChanceGrowStageRequirement.IsRequirementCompleted consumes Unity's global RNG,
+        /// so GrowPath.CheckIfRequirementsMet and GrowStageContainer.GetDesiredGrowPath must
+        /// never be called from here. Same rule Plant Peek follows.
+        /// </summary>
+        internal static bool NeedsWater(IGridObjectView gridObjectView)
+        {
+            var itemAsset = gridObjectView?.ItemAsset;
+            if (itemAsset == null)
+            {
+                return true;
+            }
+
+            if (needsWaterCache.TryGetValue(itemAsset, out var cached))
+            {
+                return cached;
+            }
+
+            var result = ScanForWaterRequirement(itemAsset);
+            needsWaterCache[itemAsset] = result;
+            return result;
+        }
+
+        private static bool ScanForWaterRequirement(ItemAsset itemAsset)
+        {
+            var container = itemAsset.GrowableAddon?.GrowStageContainer;
+            var stages = container?.CachedGrowStages;
+            if (stages == null)
+            {
+                // Unknown shape - assume it needs water, because the failure this rule prevents
+                // is silent and permanent while a wrong refusal is merely annoying.
+                return true;
+            }
+
+            foreach (var stage in stages)
+            {
+                if (stage?.GrowPaths == null)
+                {
+                    continue;
+                }
+
+                foreach (var path in stage.GrowPaths)
+                {
+                    if (path == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var requirement in path.GetComponents<IGrowStageRequirement>())
+                    {
+                        if (requirement is WaterGrowStageRequirement)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Set when a placement was refused purely because of this rule, so the shout can

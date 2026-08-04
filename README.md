@@ -2,9 +2,9 @@
 
 Move planted crops in decorate mode — without losing their growth.
 
-**Status:** v0.1.1 — **not yet confirmed working.** 0.1.0 was tested in game and did nothing at
-all; the cause is found and fixed, but the fix has not been run. [TESTING.md](TESTING.md) now
-opens with how to read the log, which will say which of the three failure modes you are in.
+**Status:** v0.1.5 — **confirmed working in game.** Moving planted crops in decorate mode does
+what it says. Wild trees and bushes are off by default; see `IncludeWildPlants` below. The
+save-safety checks in [TESTING.md](TESTING.md) have still not been run.
 
 **Nexus title (planned):** `Transplant - Move Planted Crops Without Losing Growth`
 
@@ -19,6 +19,25 @@ and they become selectable only while **X** is active (press to toggle, or hold 
 releases in a row failed because of it rather than because of anything to do with plants.
 
 Every setting is configurable through Mod Menu.
+
+## Wild trees and bushes
+
+Not movable by default. The game records `IsPlayerPlanted` on a growable and sets it in exactly
+one place — `PlayerPlantItemState`, when *you* plant a seed — so anything the world grew is
+excluded. Wild trees even grow through a requirement that checks for it:
+
+```csharp
+// WildTreeGrowStageRequirement
+public override bool IsRequirementCompleted(...) => !growablePersistence.IsPlayerPlanted;
+```
+
+Set `IncludeWildPlants = true` to move them anyway. Note this changes the character of the mod
+— rearranging the landscape rather than tidying your farm — which is why it is opt-in.
+
+The soil rule does not apply to them, and that is deliberate rather than an oversight. It exists
+to stop a plant being stranded where its water requirement can never be met; a wild tree has no
+water requirement to strand, and nothing waterable sits under one, so enforcing it would let you
+pick a tree up and then refuse every spot you tried to put it down.
 
 ## What it does
 
@@ -50,7 +69,7 @@ method, and the game's own decorate selection already does the hover work.
 
 ## How it is built
 
-Five patches, no new data.
+Seven patches, no new data.
 
 | Patch | Why |
 |---|---|
@@ -59,6 +78,8 @@ Five patches, no new data.
 | `BaseDecorateStateMachineContext.ShoutIfPlacementIsInValid` | Explains the refusal. The game calls this only when the player pressed place and it failed, so it cannot spam. |
 | `ObjectPickupAction.Cancel` | Returns a cancelled plant to its original tile. Vanilla skips its restore for anything not flagged movable. |
 | `PlayerDecorateStateMachine` (4 methods) | Tracks whether decorate mode is open and whether a plant is in hand. |
+| `DecorateSelectState` (5 methods) | Forces the game to recompute its selection when arming changes, plus diagnostics. |
+| `BaseDecorateState.OnActivate` | Names each decorate state in the log as it runs. |
 
 Two decisions worth knowing, both departures from the first draft of the research:
 

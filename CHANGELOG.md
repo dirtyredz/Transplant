@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.5 — 2026-08-04
+
+**First release confirmed working in game.** Moving planted crops in decorate mode does what it
+says.
+
+- **The soil rule now applies only to plants that can actually be watered.** It exists to stop a
+  plant being stranded where its water requirement can never be satisfied — so a plant with no
+  `WaterGrowStageRequirement` anywhere in its grow graph has nothing to strand, and refusing its
+  placement was wrong. This is what makes wild trees and bushes movable at all: turning on
+  `IncludeWildPlants` without it would have let you pick a tree up and then refuse every spot
+  you tried to put it down, since nothing waterable sits under a wild tree.
+  The scan enumerates requirement components without evaluating them —
+  `RandomChanceGrowStageRequirement` consumes Unity's global RNG — and caches per item asset.
+- Wild trees, bushes and weeds remain **off by default**. They are excluded by
+  `GrowablePersistence.IsPlayerPlanted`, which the game sets only when you plant something
+  yourself. `IncludeWildPlants = true` now genuinely works rather than half-working.
+
 ## 0.1.4 — 2026-08-04
 
 **No key is needed any more.** `RequireModifier` now defaults to false, so plants are movable

@@ -279,7 +279,9 @@ namespace Transplant
                 return;
             }
 
-            if (!Plugin.RequireSoil.Value)
+            // A plant that is never gated on watering has nothing to be stranded by, so the
+            // soil rule does not apply to it. This is what lets wild trees and bushes move.
+            if (!Plugin.RequireSoil.Value || !SoilCheck.NeedsWater(gridObjectView))
             {
                 return;
             }

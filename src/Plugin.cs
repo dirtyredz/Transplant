@@ -14,7 +14,7 @@ namespace Transplant
         public const string PluginName = "Transplant";
         // Keep in step with <Version> in the csproj - pack.ps1 names the archive from that one
         // and BepInEx reports this one. See 12-versioning-and-release.md.
-        public const string PluginVersion = "0.1.4";
+        public const string PluginVersion = "0.1.5";
 
         private Harmony harmony;
 
@@ -103,7 +103,7 @@ namespace Transplant
             IncludeWildPlants = config.Bind(
                 "Moving", "IncludeWildPlants", false,
                 new ConfigDescription(
-                    "Also allow moving wild vegetation and weeds, not just planted crops.",
+                    "Also move wild plants - trees, bushes, weeds - not just crops you planted.",
                     null,
                     MovingSection, "ModMenu.Label=Include wild plants"));
 
