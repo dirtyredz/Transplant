@@ -2,12 +2,20 @@
 
 Move planted crops in decorate mode — without losing their growth.
 
-**Status:** 🔬 **Researched, not started.** No code yet. This repo currently holds the
-decompile notes that the implementation will be built from.
+**Status:** v0.1.0 — **builds and deploys, never run in game.** All thirteen Harmony targets
+were checked to exist in the decompiled assembly, but nothing here has been exercised. The
+checks that matter are in [TESTING.md](TESTING.md).
 
 **Nexus title (planned):** `Transplant - Move Planted Crops Without Losing Growth`
 
-## What it will do
+## How to use it
+
+**Hold X** in decorate mode and plants become selectable; pick one up and move it like any
+other decoration. Without the key held, decorate mode behaves exactly as it always did — the
+arming key exists so the cursor does not start grabbing crops you were trying to decorate
+around. Configurable, along with everything else, through Mod Menu.
+
+## What it does
 
 Moonlight Peaks lets you rearrange furniture, paths and (with
 [Serena's Conjuring](https://www.nexusmods.com/moonlightpeaks/mods/62)) whole buildings in
@@ -34,6 +42,38 @@ healthy — no warning, no log line, visible only days later.
 So the core rule is not "let plants move". It is **refuse to place a growable on a cell with
 no waterable.** Everything else is comparatively easy: the pickup gate is a single virtual
 method, and the game's own decorate selection already does the hover work.
+
+## How it is built
+
+Five patches, no new data.
+
+| Patch | Why |
+|---|---|
+| `BaseDecorateStateMachineContext.CanMoveGridView` | The pickup gate. The one method on the selection path that reads `GridControlType.Movable`. |
+| `GridObjectHelper.IsPlacementAllowed` | The soil rule. Vetoing at the outermost validation turns the cursor red and blocks the click through the game's own path. |
+| `BaseDecorateStateMachineContext.ShoutIfPlacementIsInValid` | Explains the refusal. The game calls this only when the player pressed place and it failed, so it cannot spam. |
+| `ObjectPickupAction.Cancel` | Returns a cancelled plant to its original tile. Vanilla skips its restore for anything not flagged movable. |
+| `PlayerDecorateStateMachine` (4 methods) | Tracks whether decorate mode is open and whether a plant is in hand. |
+
+Two decisions worth knowing, both departures from the first draft of the research:
+
+**The gate is patched on `CanMoveGridView`, not on `GridObjectItemAddon.ControlTypes`.** The
+research preferred the latter because it would fix cancel for free. But `ControlTypes` is a
+trivial auto-property getter, and a getter small enough for the Mono JIT to inline is a poor
+Harmony target — call sites already inlined before the patch applies keep the old answer.
+`CanMoveGridView` has a real body and cannot be inlined away. The cost is one extra patch on
+`ObjectPickupAction.Cancel`, which is cheap and explicit.
+
+**A pickup latches arming on until the plant is placed or cancelled.** Arming is normally tied
+to the held key, but `ObjectPickupAction.Cancel` restores position only for objects that read
+as movable *at the moment Esc is pressed*. Let go of X mid-carry without the latch and
+cancelling would drop the plant wherever the cursor was.
+
+Two of the research's open questions are answered by construction rather than by testing.
+`SoilCheck` mirrors `WaterGrowStageRequirement`'s lookup exactly instead of asking "is there a
+farm tile here", so a growable that turns out to carry its own waterable satisfies the check
+the same way it would satisfy the game, and the check is on the **origin cell only** — the only
+cell the game itself looks at — which avoids being stricter than vanilla for multi-cell trees.
 
 ## Research
 
