@@ -2,9 +2,11 @@
 
 Move planted crops in decorate mode — without losing their growth.
 
-**Status:** v0.1.5 — **confirmed working in game.** Moving planted crops in decorate mode does
-what it says. Wild trees and bushes are off by default; see `IncludeWildPlants` below. The
-save-safety checks in [TESTING.md](TESTING.md) have still not been run.
+**Status:** v1.0.0 — **confirmed working in game, packaged, not yet published.** Moving planted
+crops in decorate mode does what it says, grape trellises included. Two checks still gate the
+upload: the save/load round-trip and the save diff, both in [RELEASING.md](RELEASING.md).
+
+Build the archive with `.\pack.ps1` → `dist/Transplant-1.0.0.zip`.
 
 **Nexus title (planned):** `Transplant - Move Planted Crops Without Losing Growth`
 

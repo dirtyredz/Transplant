@@ -93,7 +93,7 @@ namespace Transplant
             machineActive = true;
             carrying = false;
             toggledOn = false;
-            Plugin.Log.LogInfo("Decorate mode opened (state machine).");
+            Plugin.Debug("Decorate mode opened (state machine).");
         }
 
         internal static void ExitDecorate()
@@ -101,13 +101,13 @@ namespace Transplant
             machineActive = false;
             carrying = false;
             toggledOn = false;
-            Plugin.Log.LogInfo("Decorate mode closed (state machine).");
+            Plugin.Debug("Decorate mode closed (state machine).");
         }
 
         internal static void EnterSelect()
         {
             selectActive = true;
-            Plugin.Log.LogInfo(
+            Plugin.Debug(
                 Plugin.PressToToggle.Value
                     ? $"Selection state active. Press {Plugin.Modifier.Value.MainKey} to arm."
                     : $"Selection state active. Hold {Plugin.Modifier.Value.MainKey} to arm.");
@@ -139,7 +139,7 @@ namespace Transplant
             }
 
             lastArmed = armed;
-            Plugin.Log.LogInfo(armed ? "Armed - plants are selectable." : "Disarmed.");
+            Plugin.Debug(armed ? "Armed - plants are selectable." : "Disarmed.");
             return true;
         }
 

@@ -14,7 +14,7 @@ namespace Transplant
         public const string PluginName = "Transplant";
         // Keep in step with <Version> in the csproj - pack.ps1 names the archive from that one
         // and BepInEx reports this one. See 12-versioning-and-release.md.
-        public const string PluginVersion = "0.1.5";
+        public const string PluginVersion = "1.0.0";
 
         private Harmony harmony;
 
@@ -48,6 +48,23 @@ namespace Transplant
     internal static class Plugin
     {
         internal static ManualLogSource Log;
+
+        /// <summary>
+        /// Diagnostic logging, silent unless the player asks for it.
+        ///
+        /// These lines ran unconditionally through 0.1.x because they were the only way to tell
+        /// three identical-looking failures apart, and the run that needed them was always the
+        /// run where nobody had thought to turn them on. That trade is right while debugging and
+        /// wrong once shipped - a working mod has no business writing a line per cursor cell into
+        /// everyone's log.
+        /// </summary>
+        internal static void Debug(string message)
+        {
+            if (VerboseLogging != null && VerboseLogging.Value)
+            {
+                Log.LogInfo(message);
+            }
+        }
 
         internal static ConfigEntry<bool> Enabled;
         internal static ConfigEntry<bool> RequireModifier;

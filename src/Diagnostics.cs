@@ -5,15 +5,23 @@ using UnityEngine;
 namespace Transplant
 {
     /// <summary>
-    /// Enough logging to tell the three "it does nothing" failures apart without another guess:
+    /// Enough logging to tell the "it does nothing" failures apart without guessing:
     ///
-    ///   1. decorate mode never registers      -> no "Selection state active" line
+    ///   1. decorate mode never registers      -> no "Decorate state" line
     ///   2. the key never registers            -> no "Armed" line
     ///   3. the gate is asked and says no      -> "considered" lines but no "now movable"
+    ///   4. a placement is refused             -> which side refused, and whether soil was there
     ///
-    /// 0.1.0 shipped with none of this and cost a whole test cycle to learn only that something
-    /// upstream was wrong. These lines are rate-limited rather than gated behind VerboseLogging,
-    /// because the one time they matter is the run where the player did not know to turn it on.
+    /// Every one of these was added after a report that the mod did nothing, and each round of
+    /// that cost a test cycle. They are worth keeping for the next such report.
+    ///
+    /// All of it routes through Plugin.Debug and is silent unless VerboseLogging is on. During
+    /// development it ran unconditionally, on the reasoning that the run needing these lines is
+    /// always the run where nobody turned them on - true then, and wrong to ship, since some of
+    /// them fire per cursor cell.
+    ///
+    /// The rate limiting below still matters: with verbose logging on, an unthrottled line in
+    /// placement validation would write several times per frame.
     /// </summary>
     internal static class Diagnostics
     {
@@ -42,14 +50,14 @@ namespace Transplant
 
             if (seenStates.Count == 1)
             {
-                Plugin.Log.LogInfo(Plugin.RequireModifier.Value
+                Plugin.Debug(Plugin.RequireModifier.Value
                     ? $"Decorate state '{stateName}'. Arming needs {Plugin.Modifier.Value.MainKey} " +
                       $"({(Plugin.PressToToggle.Value ? "press to toggle" : "hold")})."
                     : $"Decorate state '{stateName}'. No key needed - plants are movable now.");
                 return;
             }
 
-            Plugin.Log.LogInfo($"Decorate state '{stateName}'.");
+            Plugin.Debug($"Decorate state '{stateName}'.");
         }
 
         internal static void Considered(IGridObjectView gridObjectView)
@@ -64,7 +72,7 @@ namespace Transplant
             var itemAsset = gridObjectView?.ItemAsset;
             if (itemAsset == null)
             {
-                Plugin.Log.LogInfo("Armed, but the object under the cursor has no item asset.");
+                Plugin.Debug("Armed, but the object under the cursor has no item asset.");
                 return;
             }
 
@@ -88,7 +96,7 @@ namespace Transplant
                 reason = "excluded";
             }
 
-            Plugin.Log.LogInfo($"Armed, considered '{itemAsset.name}': {reason}.");
+            Plugin.Debug($"Armed, considered '{itemAsset.name}': {reason}.");
         }
 
         internal static void Allowed(IGridObjectView gridObjectView)
@@ -100,7 +108,7 @@ namespace Transplant
             }
 
             lastAllowedName = name;
-            Plugin.Log.LogInfo($"'{name}' at {gridObjectView.Position} is now movable.");
+            Plugin.Debug($"'{name}' at {gridObjectView.Position} is now movable.");
         }
 
         /// <summary>
@@ -166,7 +174,7 @@ namespace Transplant
                 }
             }
 
-            Plugin.Log.LogInfo(
+            Plugin.Debug(
                 $"Column ({x},{y},{z}) contains: {(found.Length > 0 ? found.ToString() : "nothing")} " +
                 $"-> selected {result?.ItemAsset?.name ?? "nothing"}");
         }
@@ -195,7 +203,7 @@ namespace Transplant
             }
 
             lastVerdictKey = key;
-            Plugin.Log.LogInfo(
+            Plugin.Debug(
                 $"Game gate on '{itemAsset.name}': {(result ? "movable" : "NOT movable")} " +
                 $"(onGrid={gridObjectView.IsAddedToWorldGrid}, playerPlanted={MoveGate.IsPlayerPlanted(gridObjectView)}).");
         }
@@ -231,7 +239,7 @@ namespace Transplant
             }
 
             lastPlacementKey = key;
-            Plugin.Log.LogInfo(message);
+            Plugin.Debug(message);
         }
 
         internal static void Reset()

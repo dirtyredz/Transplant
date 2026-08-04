@@ -36,12 +36,8 @@ namespace Transplant
             if (MoveGate.IsMovablePlant(newGridObjectView))
             {
                 MoveGate.PickedUp();
-
-                if (Plugin.VerboseLogging.Value)
-                {
-                    Plugin.Log.LogInfo(
-                        $"Picked up {newGridObjectView.ItemAsset.name} at {newGridObjectView.Position}.");
-                }
+                Plugin.Debug(
+                    $"Picked up {newGridObjectView.ItemAsset.name} at {newGridObjectView.Position}.");
             }
         }
 
@@ -191,7 +187,7 @@ namespace Transplant
             var blocker = gridObjectView.MovementBlocker;
             if (blocker != null && !blocker.IsFree)
             {
-                Plugin.Log.LogInfo(
+                Plugin.Debug(
                     $"Plant at {gridObjectView.Position} is movement-blocked; leaving it alone.");
                 return;
             }
@@ -231,7 +227,7 @@ namespace Transplant
 
             if (Plugin.VerboseLogging.Value)
             {
-                Plugin.Log.LogInfo($"Cancelled - returned plant to {___identityPosition}.");
+                Plugin.Debug($"Cancelled - returned plant to {___identityPosition}.");
             }
         }
     }
