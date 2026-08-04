@@ -22,6 +22,7 @@ namespace Transplant
         private static string lastAllowedName;
         private static Vector3Int lastColumn = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
         private static string lastVerdictKey;
+        private static string lastPlacementKey;
 
         internal static void Considered(IGridObjectView gridObjectView)
         {
@@ -171,10 +172,45 @@ namespace Transplant
                 $"(onGrid={gridObjectView.IsAddedToWorldGrid}, playerPlanted={MoveGate.IsPlayerPlanted(gridObjectView)}).");
         }
 
+        /// <summary>
+        /// The game refused the placement on its own. Reporting whether the cell had a waterable
+        /// anyway separates "the game dislikes this spot" from "the mod would have vetoed too".
+        /// </summary>
+        internal static void PlacementRefusedByGame(Vector2Int cell, bool hasWaterable)
+        {
+            Say($"placement-game:{cell}", $"Game refused placement at {cell} " +
+                $"(waterable there: {(hasWaterable ? "yes" : "no")}). Not the mod's doing.");
+        }
+
+        internal static void PlacementRefusedByMod(Vector2Int cell)
+        {
+            Say($"placement-mod:{cell}", $"Refused placement at {cell}: nothing waterable there.");
+        }
+
+        internal static void PlacementAllowed(Vector2Int cell)
+        {
+            Say($"placement-ok:{cell}", $"Placement allowed at {cell}.");
+        }
+
+        /// <summary>
+        /// One line per distinct message, so a per-frame validation loop cannot flood the log.
+        /// </summary>
+        private static void Say(string key, string message)
+        {
+            if (key == lastPlacementKey)
+            {
+                return;
+            }
+
+            lastPlacementKey = key;
+            Plugin.Log.LogInfo(message);
+        }
+
         internal static void Reset()
         {
             lastConsideredAt = -99f;
             lastAllowedName = null;
+            lastPlacementKey = null;
             lastColumn = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
             lastVerdictKey = null;
         }

@@ -14,7 +14,7 @@ namespace Transplant
         public const string PluginName = "Transplant";
         // Keep in step with <Version> in the csproj - pack.ps1 names the archive from that one
         // and BepInEx reports this one. See 12-versioning-and-release.md.
-        public const string PluginVersion = "0.1.2";
+        public const string PluginVersion = "0.1.3";
 
         private Harmony harmony;
 
@@ -51,6 +51,7 @@ namespace Transplant
         internal static ConfigEntry<bool> Enabled;
         internal static ConfigEntry<bool> RequireModifier;
         internal static ConfigEntry<KeyboardShortcut> Modifier;
+        internal static ConfigEntry<bool> PressToToggle;
         internal static ConfigEntry<bool> RequireSoil;
         internal static ConfigEntry<bool> IncludeWildPlants;
         internal static ConfigEntry<string> NeedsSoilMessage;
@@ -80,16 +81,23 @@ namespace Transplant
             RequireModifier = config.Bind(
                 "Moving", "RequireModifier", true,
                 new ConfigDescription(
-                    "Only treat plants as movable while the key below is held.",
+                    "Require the key below. Off makes plants always movable in decorate mode.",
                     null,
                     MovingSection, "ModMenu.Label=Hold a key to arm"));
 
             Modifier = config.Bind(
                 "Moving", "Modifier", new KeyboardShortcut(KeyCode.X),
                 new ConfigDescription(
-                    "Hold this in decorate mode to make plants selectable.",
+                    "Press this in decorate mode to make plants selectable.",
                     null,
                     MovingSection, "ModMenu.Label=Arming key"));
+
+            PressToToggle = config.Bind(
+                "Moving", "PressToToggle", true,
+                new ConfigDescription(
+                    "Press the key to turn plant-moving on and off. Off means hold it instead.",
+                    null,
+                    MovingSection, "ModMenu.Label=Press to toggle"));
 
             IncludeWildPlants = config.Bind(
                 "Moving", "IncludeWildPlants", false,

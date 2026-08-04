@@ -31,6 +31,17 @@ namespace Transplant
             return ModifiersHeld(shortcut);
         }
 
+        internal static bool WasPressed(KeyboardShortcut shortcut)
+        {
+            var main = shortcut.MainKey;
+            if (main == KeyCode.None || !UnityEngine.Input.GetKeyDown(main))
+            {
+                return false;
+            }
+
+            return ModifiersHeld(shortcut);
+        }
+
         private static bool ModifiersHeld(KeyboardShortcut shortcut)
         {
             foreach (var modifier in shortcut.Modifiers)

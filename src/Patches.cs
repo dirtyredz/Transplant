@@ -85,6 +85,8 @@ namespace Transplant
         [HarmonyPatch("OnActiveUpdate")]
         internal static void BeforeUpdate(ref bool ___forceUpdate)
         {
+            MoveGate.PollToggle();
+
             if (MoveGate.ConsumeArmedChanged())
             {
                 ___forceUpdate = true;
@@ -241,31 +243,38 @@ namespace Transplant
             Vector2Int? positionOffset,
             ref bool __result)
         {
-            if (!__result)
-            {
-                return;
-            }
-
             // Only ever narrows placement for a plant this mod put in the player's hand. A seed
             // planted the normal way is not affected.
-            if (!MoveGate.Carrying || !Plugin.RequireSoil.Value)
-            {
-                return;
-            }
-
-            if (!MoveGate.IsMovablePlant(gridObjectView))
+            if (!MoveGate.Carrying || !MoveGate.IsMovablePlant(gridObjectView))
             {
                 return;
             }
 
             var cell = gridObjectView.Position + (positionOffset ?? Vector2Int.zero);
+
+            if (!__result)
+            {
+                // The game refused before we were consulted. Worth a line of its own: "the mod
+                // will not let me put this down" and "the game will not let me put this down"
+                // are indistinguishable from the player's side and need different fixes.
+                Diagnostics.PlacementRefusedByGame(cell, SoilCheck.HasWaterableAt(cell));
+                return;
+            }
+
+            if (!Plugin.RequireSoil.Value)
+            {
+                return;
+            }
+
             if (SoilCheck.HasWaterableAt(cell))
             {
+                Diagnostics.PlacementAllowed(cell);
                 return;
             }
 
             __result = false;
             SoilCheck.VetoedOnFrame = Time.frameCount;
+            Diagnostics.PlacementRefusedByMod(cell);
         }
     }
 

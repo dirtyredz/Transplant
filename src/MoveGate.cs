@@ -16,6 +16,7 @@ namespace Transplant
         private static bool machineActive;
         private static bool selectActive;
         private static bool carrying;
+        private static bool toggledOn;
 
         /// <summary>
         /// True while the player is inside decorate mode.
@@ -58,14 +59,40 @@ namespace Transplant
                     return true;
                 }
 
-                return Hotkey.IsHeld(Plugin.Modifier.Value);
+                return Plugin.PressToToggle.Value ? toggledOn : Hotkey.IsHeld(Plugin.Modifier.Value);
             }
+        }
+
+        /// <summary>
+        /// Flips the toggle when the key is pressed.
+        ///
+        /// The first three builds treated the key as hold-to-arm, which loses a race nobody
+        /// should have to win: pressing and releasing arms for a frame or two, and the selection
+        /// recomputes as unselectable the moment the key comes back up. The player has to click
+        /// inside that window. "Hitting X" was the request, so pressing it now latches.
+        /// </summary>
+        internal static void PollToggle()
+        {
+            if (!Plugin.PressToToggle.Value || !DecorateActive)
+            {
+                return;
+            }
+
+            if (!Hotkey.WasPressed(Plugin.Modifier.Value))
+            {
+                return;
+            }
+
+            toggledOn = !toggledOn;
+            // Deliberately silent - ConsumeArmedChanged is the single place that reports a
+            // change of arming state, whichever mode produced it.
         }
 
         internal static void EnterDecorate()
         {
             machineActive = true;
             carrying = false;
+            toggledOn = false;
             Plugin.Log.LogInfo("Decorate mode opened (state machine).");
         }
 
@@ -73,6 +100,7 @@ namespace Transplant
         {
             machineActive = false;
             carrying = false;
+            toggledOn = false;
             Plugin.Log.LogInfo("Decorate mode closed (state machine).");
         }
 
@@ -80,7 +108,9 @@ namespace Transplant
         {
             selectActive = true;
             Plugin.Log.LogInfo(
-                $"Selection state active. Hold {Plugin.Modifier.Value.MainKey} to arm.");
+                Plugin.PressToToggle.Value
+                    ? $"Selection state active. Press {Plugin.Modifier.Value.MainKey} to arm."
+                    : $"Selection state active. Hold {Plugin.Modifier.Value.MainKey} to arm.");
         }
 
         internal static void ExitSelect()
@@ -109,9 +139,7 @@ namespace Transplant
             }
 
             lastArmed = armed;
-            Plugin.Log.LogInfo(armed
-                ? "Armed - plants are selectable while the key is held."
-                : "Disarmed - plants are no longer selectable.");
+            Plugin.Log.LogInfo(armed ? "Armed - plants are selectable." : "Disarmed.");
             return true;
         }
 

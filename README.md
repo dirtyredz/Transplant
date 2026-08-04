@@ -10,10 +10,13 @@ opens with how to read the log, which will say which of the three failure modes 
 
 ## How to use it
 
-**Hold X** in decorate mode and plants become selectable; pick one up and move it like any
-other decoration. Without the key held, decorate mode behaves exactly as it always did — the
-arming key exists so the cursor does not start grabbing crops you were trying to decorate
-around. Configurable, along with everything else, through Mod Menu.
+**Press X** in decorate mode to arm the mod; plants become selectable and move like any other
+decoration. **Press X again** to disarm. While disarmed — which is how every session starts —
+decorate mode behaves exactly as it always did, so the cursor never starts grabbing crops you
+were only trying to decorate around.
+
+Set `PressToToggle` to false if you would rather hold the key than toggle it. Every setting is
+configurable through Mod Menu.
 
 ## What it does
 

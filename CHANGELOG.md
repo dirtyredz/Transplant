@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.3 — 2026-08-04
+
+Selection is confirmed working — the log shows a grape vine found, gated and marked movable.
+Two things were still wrong.
+
+- **The arming key is now a toggle: press once to arm, press again to disarm.** The first three
+  builds required the key to be *held*, which created a race the player had to win: press and
+  release, and the selection recomputes as unselectable the moment the key comes up, so the
+  pickup only lands if the click happens inside that window. The original request was "hitting
+  X", and that is now what it does. `PressToToggle` can be turned off to get the old
+  hold behaviour back.
+- **Added diagnostics that say who refused a placement.** A picked-up vine could not be put down
+  anywhere, and nothing shipped so far distinguished the mod's soil veto from the game's own
+  placement rules — two different fixes behind one symptom.
+
+Placement is not fixed, only made legible. The vine is four cells tall, which is the likely
+complication.
+
 ## 0.1.2 — 2026-08-04
 
 The 0.1.1 log showed the machinery working — decorate mode detected, key detected, gate
