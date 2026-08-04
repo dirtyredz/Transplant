@@ -2,7 +2,7 @@
 
 Move planted crops in decorate mode — without losing their growth.
 
-**Status:** v0.1.0 — **builds and deploys, never run in game.** All thirteen Harmony targets
+**Status:** v0.1.1 — 0.1.0 was tested and did nothing; the cause is fixed and the fix is not yet confirmed. See [TESTING.md](TESTING.md), which now starts with how to read the log.
 were checked to exist in the decompiled assembly, but nothing here has been exercised. The
 checks that matter are in [TESTING.md](TESTING.md).
 

@@ -17,6 +17,7 @@ namespace Transplant
         {
             MoveGate.EnterDecorate();
             SoilCheck.Reset();
+            Diagnostics.Reset();
         }
 
         [HarmonyPostfix]
@@ -25,6 +26,7 @@ namespace Transplant
         {
             MoveGate.ExitDecorate();
             SoilCheck.Reset();
+            Diagnostics.Reset();
         }
 
         [HarmonyPostfix]
@@ -48,6 +50,45 @@ namespace Transplant
         internal static void AfterPlace()
         {
             MoveGate.PutDown();
+        }
+    }
+
+    /// <summary>
+    /// Makes the arming key actually do something the moment it is pressed.
+    ///
+    /// DecorateSelectState.ProcessSelection returns immediately unless the cursor moved this
+    /// frame or forceUpdate is set. Arming while the mouse is still therefore changed nothing
+    /// in 0.1.0 - the gate below was never reached. Setting forceUpdate on the frame the
+    /// arming state flips makes the game re-run its own selection with the new answer.
+    ///
+    /// This also tracks whether the selection state is open, which is the more reliable of the
+    /// two "is decorate mode active" signals since it is the state that does the selecting.
+    /// </summary>
+    [HarmonyPatch(typeof(DecorateSelectState))]
+    internal static class SelectStatePatches
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("OnActivate")]
+        internal static void AfterActivate()
+        {
+            MoveGate.EnterSelect();
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("OnDeactivate")]
+        internal static void AfterDeactivate()
+        {
+            MoveGate.ExitSelect();
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("OnActiveUpdate")]
+        internal static void BeforeUpdate(ref bool ___forceUpdate)
+        {
+            if (MoveGate.ConsumeArmedChanged())
+            {
+                ___forceUpdate = true;
+            }
         }
     }
 
@@ -85,6 +126,10 @@ namespace Transplant
 
             if (!MoveGate.IsMovablePlant(gridObjectView))
             {
+                // Armed and the game asked about something - just not a plant we handle. Worth
+                // one line, because "the gate is never even asked about a plant" and "the gate
+                // says no" are different bugs and otherwise look identical from the outside.
+                Diagnostics.Considered(gridObjectView);
                 return;
             }
 
@@ -100,10 +145,13 @@ namespace Transplant
             var blocker = gridObjectView.MovementBlocker;
             if (blocker != null && !blocker.IsFree)
             {
+                Plugin.Log.LogInfo(
+                    $"Plant at {gridObjectView.Position} is movement-blocked; leaving it alone.");
                 return;
             }
 
             __result = true;
+            Diagnostics.Allowed(gridObjectView);
         }
     }
 

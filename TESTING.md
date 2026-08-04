@@ -11,11 +11,26 @@ The default arming key is **X**, held, while in decorate mode.
 Launch, open `BepInEx\LogOutput.log`, expect:
 
 ```
-[Info: Transplant] Transplant 0.1.0 loaded. Nothing new is written to your save.
+[Info: Transplant] Transplant 0.1.1 loaded. Nothing new is written to your save.
 ```
 
-Any `HarmonyLib` exception near it means a patch target did not resolve, and nothing below
-will work. That is the single most likely failure for a first run.
+Any `HarmonyLib` exception near it means a patch target did not resolve.
+
+## 0b. Read the log first if nothing happens
+
+0.1.1 logs enough to tell the three "it does nothing" failures apart. Enter decorate mode,
+hold **X** over a crop, then read the log:
+
+| What you see | What it means |
+|---|---|
+| no `Selection state active` line | decorate mode is not being detected — the patches are on the wrong state |
+| that line, but no `Armed` line | the key is not reaching the mod; try rebinding `Modifier` |
+| `Armed`, then `considered '<name>': not a growable` | the mod is being asked about the wrong object — a selection-path problem, not a gate problem |
+| `Armed`, then nothing at all | the gate is never consulted; selection is not reaching it |
+| `'<name>' at (x, y) is now movable` | the gate said yes — if it still will not pick up, the problem is downstream |
+
+That table is the point of this release; **quote whichever line you get** rather than only that
+it did not work.
 
 ## 1. The arming key
 

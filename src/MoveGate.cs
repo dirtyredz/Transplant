@@ -13,11 +13,19 @@ namespace Transplant
     /// </summary>
     internal static class MoveGate
     {
-        private static bool decorateActive;
+        private static bool machineActive;
+        private static bool selectActive;
         private static bool carrying;
 
-        /// <summary>True while the player is inside decorate mode.</summary>
-        internal static bool DecorateActive => decorateActive;
+        /// <summary>
+        /// True while the player is inside decorate mode.
+        ///
+        /// Two independent signals, because the first build set this only from
+        /// PlayerDecorateStateMachine and there was no way to tell from the outside whether that
+        /// had fired. DecorateSelectState is the state that actually does the selecting, so if
+        /// either says decorate mode is open, it is.
+        /// </summary>
+        internal static bool DecorateActive => machineActive || selectActive;
 
         /// <summary>True while a growable has been picked up and not yet put back down.</summary>
         internal static bool Carrying => carrying;
@@ -35,7 +43,7 @@ namespace Transplant
                     return false;
                 }
 
-                if (!decorateActive)
+                if (!DecorateActive)
                 {
                     return false;
                 }
@@ -56,15 +64,58 @@ namespace Transplant
 
         internal static void EnterDecorate()
         {
-            decorateActive = true;
+            machineActive = true;
             carrying = false;
+            Plugin.Log.LogInfo("Decorate mode opened (state machine).");
         }
 
         internal static void ExitDecorate()
         {
-            decorateActive = false;
+            machineActive = false;
             carrying = false;
+            Plugin.Log.LogInfo("Decorate mode closed (state machine).");
         }
+
+        internal static void EnterSelect()
+        {
+            selectActive = true;
+            Plugin.Log.LogInfo(
+                $"Selection state active. Hold {Plugin.Modifier.Value.MainKey} to arm.");
+        }
+
+        internal static void ExitSelect()
+        {
+            selectActive = false;
+        }
+
+        /// <summary>
+        /// Whether Armed flipped since the last call, so the caller can force the game to
+        /// recompute its selection.
+        ///
+        /// This exists because DecorateSelectState.ProcessSelection opens with
+        ///
+        ///     if (!DecorateCursor.Instance.MovedThisFrame &amp;&amp; !forceUpdate) return;
+        ///
+        /// so pressing the arming key while the mouse is still changes nothing at all - the
+        /// gate is simply never consulted. That was the whole of why 0.1.0 appeared to do
+        /// nothing: it worked only if you happened to move the mouse while holding the key.
+        /// </summary>
+        internal static bool ConsumeArmedChanged()
+        {
+            var armed = Armed;
+            if (armed == lastArmed)
+            {
+                return false;
+            }
+
+            lastArmed = armed;
+            Plugin.Log.LogInfo(armed
+                ? "Armed - plants are selectable while the key is held."
+                : "Disarmed - plants are no longer selectable.");
+            return true;
+        }
+
+        private static bool lastArmed;
 
         internal static void PickedUp()
         {
