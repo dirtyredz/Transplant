@@ -138,15 +138,24 @@ Files live in `screenshots/`. The thumbnail is set separately in the upload form
 | - | Thumbnail, **16:9** | `thumbnail.png` | ⬜ to make |
 | - | Title banner | `banner.png` | ⬜ optional |
 | 1 | A crop lifted mid-move, cursor valid, farm visible | `01-moving-a-crop.png` | ✅ 541x455 |
-| 2 | The refusal — plant over bare ground, invalid cursor, shout visible | `02-needs-soil.png` | ⬜ to capture |
+| 2 | The refusal - plant over bare ground, invalid cursor, shout visible | `02-needs-soil.png` | ⬜ wanted, not blocking |
 | 3 | Before/after of a row straightened | `03-row-fixed.png` | ⬜ to capture |
 | 4 | A wild tree selected - the opt-in IncludeWildPlants feature | `04-wild-plants.png` | ✅ 641x517 |
 | 5 | Settings panel *(optional)* | `05-settings.png` | ⬜ optional |
 
-**Shot 2 is the one that sells it, not shot 1.** Anyone can claim "move your plants"; the shout
-reading *"It needs watered ground."* over an invalid placement is the visible proof that the mod
-protects the crop rather than just unlocking it. That is the difference between this and simply
-removing a restriction, and it is the reason the most-downloaded decorate mod left crops alone.
+**Shot 2 would be the one that sells it.** Anyone can claim "move your plants"; the shout reading
+*"It needs watered ground."* over an invalid placement is visible proof that the mod protects the
+crop rather than just unlocking it — the difference between this and simply removing a
+restriction, and the reason the most-downloaded decorate mod left crops alone.
+
+**It is not blocking, though.** Ship with 1 and 4 if that is what exists; the description already
+carries the safety claim in words, and the first paragraph is built around it. Add shot 2 later
+if the opportunity comes up.
+
+Capturing it is safe, which is worth saying because it sounds like it should not be: a refused
+placement is a placement that did not happen, so the plant stays in hand. Pick a crop up, hold it
+over plain grass, click, capture the shout, then put it back on the tile it came from. Nothing is
+written at any point.
 
 Shot 3 wants a genuinely crooked row in the "before". Straightening something already nearly
 straight reads as no change at all.

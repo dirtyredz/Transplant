@@ -6,7 +6,7 @@ Drop captures here. Full reasoning, thumbnail ratio and art direction live in
 | # | File | What it needs to show | Status |
 |---|---|---|---|
 | 1 | `01-moving-a-crop.png` | A crop lifted mid-move, cursor reading valid, farm recognisable behind it | ✅ 541x455 — grape trellis, selection brackets clear |
-| 2 | `02-needs-soil.png` | **The refusal.** Plant held over bare ground, cursor invalid, the shout *"It needs watered ground."* visible | ⬜ **still needed — this is the important one** |
+| 2 | `02-needs-soil.png` | **The refusal.** Plant held over bare ground, cursor invalid, the shout *"It needs watered ground."* visible | ⬜ wanted, not blocking |
 | 3 | `03-row-fixed.png` | A crooked row, then the same row straightened | ⬜ optional |
 | 4 | `04-wild-plants.png` | A wild tree selected, showing the opt-in `IncludeWildPlants` feature | ✅ 641x517 |
 | 5 | `05-settings.png` | Settings panel *(optional)* | ⬜ optional |
@@ -22,14 +22,29 @@ there is an easy opportunity; not worth blocking a release over.
 
 Coffin Break hit the same thing and kept its crop as evidence rather than as a listing image.
 
-## Shot 2 is the one that sells it
+## Shot 2 would sell it, but it is not blocking
 
 Shot 1 shows a restriction removed, which anyone could claim. Shot 2 shows the mod **protecting
-the crop** — and that is the actual difference between this and simply unlocking plants. The
+the crop** — the actual difference between this and simply unlocking plants. The
 most-downloaded decorate mod in the scene left crops alone precisely because moving them safely
 is the hard part, so the shout in frame is the proof that this one solved it.
 
-If only one image makes the gallery, make it that one.
+**Ship without it if it is awkward to stage.** The description carries the safety claim in words
+and opens on it; a missing image weakens the pitch rather than breaking it.
+
+### Capturing it does not risk the plant
+
+Worth stating plainly, because it sounds like it should be risky. A refused placement is a
+placement that **did not happen** — the plant stays in your hand:
+
+1. Enter decorate mode and pick up a crop
+2. Hold it over plain untilled grass; the cursor reads invalid
+3. Click anyway — the shout fires, and the plant is still in hand
+4. Capture
+5. Move back over its original tile and click to set it down
+
+Nothing is written to the save at any point, and step 5 returns the plant to where it started.
+Esc should restore it too, but that path is not yet verified, so prefer step 5.
 
 ## Practical notes
 
