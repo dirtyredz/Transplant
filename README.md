@@ -2,9 +2,9 @@
 
 Move planted crops in decorate mode — without losing their growth.
 
-**Status:** v0.1.1 — 0.1.0 was tested and did nothing; the cause is fixed and the fix is not yet confirmed. See [TESTING.md](TESTING.md), which now starts with how to read the log.
-were checked to exist in the decompiled assembly, but nothing here has been exercised. The
-checks that matter are in [TESTING.md](TESTING.md).
+**Status:** v0.1.1 — **not yet confirmed working.** 0.1.0 was tested in game and did nothing at
+all; the cause is found and fixed, but the fix has not been run. [TESTING.md](TESTING.md) now
+opens with how to read the log, which will say which of the three failure modes you are in.
 
 **Nexus title (planned):** `Transplant - Move Planted Crops Without Losing Growth`
 
@@ -99,7 +99,7 @@ is on disk only: the csproj still sets `AssemblyName`/`RootNamespace` to `Transp
 deploys to `BepInEx\plugins\MoonlightPeaksMods\Transplant`, so the built artifact is
 unchanged.
 
-## Planned guarantees
+## Guarantees
 
 - **Save-safe.** No sidecar file and no new persistence type — the mod only lets the game's
   own `SetPosition` run on an object the game already owns.
