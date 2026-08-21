@@ -2,9 +2,9 @@
 
 Move planted crops in decorate mode — without losing their growth.
 
-**Status:** v1.0.0 — **confirmed working in game, packaged, not yet published.** Moving planted
-crops in decorate mode does what it says, grape trellises included. Two checks still gate the
-upload: the save/load round-trip and the save diff, both in [RELEASING.md](RELEASING.md).
+**Status:** 🚀 **Published** — v1.0.0 live on Nexus as
+[mod 126](https://www.nexusmods.com/moonlightpeaks/mods/126). Moving planted crops in decorate
+mode does what it says, grape trellises included. See [RELEASING.md](RELEASING.md).
 
 Build the archive with `.\pack.ps1` → `dist/Transplant-1.0.0.zip`.
 
