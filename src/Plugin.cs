@@ -14,7 +14,7 @@ namespace Transplant
         public const string PluginName = "Transplant";
         // Keep in step with <Version> in the csproj - pack.ps1 names the archive from that one
         // and BepInEx reports this one. See 12-versioning-and-release.md.
-        public const string PluginVersion = "1.0.0";
+        public const string PluginVersion = ModBuildInfo.Version;
 
         private Harmony harmony;
 
