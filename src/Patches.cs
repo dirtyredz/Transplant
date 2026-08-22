@@ -225,10 +225,9 @@ namespace Transplant
             ___gridObjectView.SetRotation(___identityRotation);
             ___gridObjectView.SetPosition(___identityPosition);
 
-            if (Plugin.VerboseLogging.Value)
-            {
-                Plugin.Debug($"Cancelled - returned plant to {___identityPosition}.");
-            }
+            // Plugin.Debug already gates on VerboseLogging (and null-checks it) - trust it, the
+            // same way every other call site does.
+            Plugin.Debug($"Cancelled - returned plant to {___identityPosition}.");
         }
     }
 

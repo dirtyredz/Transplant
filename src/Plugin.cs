@@ -12,8 +12,9 @@ namespace Transplant
     {
         public const string PluginGuid = "com.dirtyredz.moonlightpeaks.transplant";
         public const string PluginName = "Transplant";
-        // Keep in step with <Version> in the csproj - pack.ps1 names the archive from that one
-        // and BepInEx reports this one. See 12-versioning-and-release.md.
+        // Single-sourced from <Version> in the csproj: Directory.Build.props generates
+        // ModBuildInfo from it at build time, so this can never drift by hand. pack.ps1 names the
+        // archive from that same <Version>, and BepInEx reports this. See 12-versioning-and-release.md.
         public const string PluginVersion = ModBuildInfo.Version;
 
         private Harmony harmony;
