@@ -5,10 +5,10 @@ should do · P2 = nice to have.
 
 ## Known issues / verification
 
-- [ ] **P0 — Run the save + reload test.** The "keeps its growth" claim on the mod page rests on the
-      plant keeping its GUID while only position is rewritten, and the reload path is unverified.
-      Move a crop, save, quit to menu, reload, confirm it's in the new spot with the right stage.
-      (See [../TESTING.md](../TESTING.md).) Not a code task — a manual in-game check.
+- [x] **P0 — Run the save + reload test.** ✅ **Done 2026-08-22.** A Blood Grape crop was moved,
+      saved, reloaded (still in the new spot at the same stage), and advanced after sleeping; verbose
+      log corroborated the move + soil-rule vetoes. The "keeps its growth" claim is now verified.
+      (See [../RELEASING.md](../RELEASING.md) checklist.)
 
 ## Structural (from the 2026-08-22 full review)
 

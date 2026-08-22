@@ -34,10 +34,12 @@ Then the items specific to this mod.
       confirm the stage is unchanged, sleep, confirm it advances normally.
       **Confirmed in game 2026-08-04**, including multi-tile grape trellises.
 
-- [ ] **A moved crop survives a save and reload.** The entire design rests on the plant keeping
+- [x] **A moved crop survives a save and reload.** The entire design rests on the plant keeping
       its GUID while only its position is rewritten. Move a crop, save, quit to the main menu,
-      reload, and confirm it is still in the new spot with the right stage. **Not yet run, and
-      it gates the "keeps its growth" claim on the mod page.**
+      reload, and confirm it is still in the new spot with the right stage.
+      **Confirmed in game 2026-08-22** — a Blood Grape crop moved, saved, reloaded in the new spot
+      at the same stage, and advanced after a night's sleep. Verbose log corroborated the move and
+      the soil-rule vetoes (mod veto vs. game refusal distinguished correctly).
 
 Re-run both after any change to `MoveGate` or the `CanMoveGridView` patch.
 

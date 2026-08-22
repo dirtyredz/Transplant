@@ -8,9 +8,9 @@ What the mod does today. Status: ✅ shipped · 🧪 shipped-but-unverified · �
   selectable and movable like any decoration.
 - ✅ **Growth preserved across a move** — grow stage, planted day and harvest count are untouched
   (verified in game 2026-08-04, incl. multi-tile grape trellises).
-- 🧪 **Survives save + reload** — rests on the plant keeping its GUID while only position is
-  rewritten; the reload path is **not yet tested** (gates the mod-page "keeps its growth" claim —
-  see [BACKLOG.md](BACKLOG.md), [../TESTING.md](../TESTING.md)).
+- ✅ **Survives save + reload** — the plant keeps its GUID while only position is rewritten.
+  Confirmed in game 2026-08-22 (Blood Grape crop moved, saved, reloaded, advanced after sleep);
+  this is what backs the mod-page "keeps its growth" claim. See [../RELEASING.md](../RELEASING.md).
 - ✅ **Wild plants opt-in** (`IncludeWildPlants`) — trees, bushes, weeds move too; off by default,
   and exempt from the soil rule.
 - ✅ **Cancel returns the plant** — Esc mid-move restores the original tile *and* rotation.
