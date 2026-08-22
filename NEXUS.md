@@ -1,5 +1,10 @@
 # Nexus Mod Page — Transplant
 
+> **Pasting into the upload form? Use [nexus-paste.md](nexus-paste.md), not this file.**
+> The copy here is wrapped for reading, and the editor turns every wrap into a `<br>`.
+> This mod's live page has 48 of them and no lists at all.
+> See [13-nexus-page-standard.md](../../13-nexus-page-standard.md).
+
 Draft copy for the Nexus listing. Same shape as
 [CoffinBreak/NEXUS.md](../CoffinBreak/NEXUS.md); read that one's notes on the upload form,
 thumbnail ratio and art direction first — they all still apply.
@@ -14,8 +19,10 @@ thumbnail ratio and art direction first — they all still apply.
 | **Summary** (short, shows in listings) | Planted the row slightly wrong? Move it. Crops keep their growth, and they will not let you strand them somewhere they cannot be watered. |
 | **Category** | Gameplay — where Free Decorate, Place Items Diagonally and Walk Through Crops all sit |
 | **Version** | 1.0.0 |
-| **Requirements** | BepInEx 5 (win_x64) — required |
-| | Mod Menu — optional, for in-game settings |
+| **Nexus page** | [mod 126](https://www.nexusmods.com/moonlightpeaks/mods/126) — live since 2026-08-04 |
+| **Requirements** | BepInEx 5 (win_x64), 5.4.23.5 or newer — required |
+| | [Mod Nook](https://www.nexusmods.com/moonlightpeaks/mods/127) — optional, for in-game settings |
+| | Mod Menu — optional, the alternative to Mod Nook |
 | **Tags** | quality of life, gameplay, save-safe, farming, decorating |
 | **Licence** | MIT (confirm before upload) |
 
@@ -50,10 +57,22 @@ Nothing new is written to your save.
 
 ### Installation instructions
 
+**With Vortex**
+
+Open the Files tab, click the Vortex button, and enable the mod. Done.
+
+**Manually**
+
 1. Install BepInEx 5 (win_x64) into your Moonlight Peaks folder, if you do not have it already.
-   The BepInEx folder should sit beside Moonlight Peaks.exe.
-2. Extract this mod into the same folder. It will land in BepInEx/plugins/Transplant.
-3. Start the game.
+   The BepInEx folder sits beside Moonlight Peaks.exe.
+2. Launch the game once, then quit. This creates the BepInEx/plugins folder.
+3. Download the archive from the Files tab and extract it over your Moonlight Peaks folder, so
+   the file ends up at BepInEx/plugins/Transplant/Transplant.dll.
+4. Launch the game.
+
+Settings are written to BepInEx/config/com.dirtyredz.moonlightpeaks.transplant.cfg on first
+launch. With Mod Nook installed you never need to open it — every setting appears under
+Pause > Mod Nook and applies immediately, without a restart.
 
 To uninstall, delete the BepInEx/plugins/Transplant folder. Plants stay wherever you last put
 them, which is an ordinary game state — nothing was ever written to your save.
@@ -79,13 +98,19 @@ them, which is an ordinary game state — nothing was ever written to your save.
 
 **Required**
 
-- BepInEx 5 (win_x64)
+- BepInEx 5 (win_x64), version 5.4.23.5 or newer
 
-**Optional**
+**Recommended companion**
 
-- Mod Menu — adds a Mods page to the pause menu so you can change this mod's settings in game.
-  Not needed; without it the settings live in a plain config file, and the defaults are meant to
-  be left alone.
+- **Mod Nook** — my in-game settings menu. Transplant's arming key is the reason to have it:
+  set the binding by pressing the key you want rather than spelling it out in a file, and turn
+  the wild-plant option on and off without leaving the game. Not needed; without it the
+  settings live in a plain config file, and the defaults are meant to be left alone.
+  https://www.nexusmods.com/moonlightpeaks/mods/127
+- **Mod Menu** by Elsiabeth does the same job and is also supported. Mod Nook and Mod Menu can
+  both be installed — each adds its own button and neither interferes with the other.
+
+PC/Steam only. The Switch and mobile builds cannot load BepInEx.
 
 **Compatibility**
 
@@ -106,8 +131,9 @@ patch.
 - **SerenaEnchanted**, whose Conjuring page states plainly that crops were left out to keep
   their watering and growth records safe. That was the right call, and it is what pointed
   straight at the problem this mod had to solve.
-- **Elsiabeth** for Mod Menu, which is why this mod's settings are configurable in game without
-  it having to build a settings screen of its own.
+- **Elsiabeth** for Mod Menu, which made the case that in-game settings were worth having, and
+  which is why this mod never had to build a settings screen of its own.
+- **My Mate**, for being my inspiration.
 
 ---
 
