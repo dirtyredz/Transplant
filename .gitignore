@@ -14,6 +14,7 @@ dist/
 # Keep it in a scratch directory outside the repo.
 decompiled/
 
-# Structure-review gate markers (local state, never committed)
-.structure-review-pending
+# Structure-review gate markers (local state, never committed).
+# The glob covers the .inflight snapshot a running review claims.
+.structure-review-pending*
 .structure-review-paused
