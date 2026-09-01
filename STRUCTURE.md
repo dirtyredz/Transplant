@@ -13,9 +13,46 @@ growing crop pickable in decorate mode** and refuses to put it down anywhere its
 never resume. No new save data — the mod only lets the game's own `SetPosition` run on an object
 the game already owns.
 
-Target: `netstandard2.1`. Plugin sources live **flat in `src/`** (no `src/Transplant/`). Version
+Target: `netstandard2.1`. Sources sit under `src/` in the workspace-wide mod taxonomy — `Plugin.cs`
+at the `src/` root beside the `.csproj`, Harmony/live-game code in `src/game/`, the mod's own logic
+in `src/core/` (this mod draws no UI, so there is no `src/ui/`). See [Layout](#layout). Version
 is single-sourced from `src/Transplant.csproj` `<Version>` via `GenerateModBuildInfo` in
 `Directory.Build.props`, surfaced to code as `ModBuildInfo.Version`.
+
+## Layout
+
+```
+Transplant/
+├── src/
+│   ├── Plugin.cs          BepInEx entry point + config/logging — MUST stay beside the .csproj
+│   ├── Transplant.csproj  netstandard2.1; **/*.cs globbing is recursive, so moves need no edit
+│   ├── game/              Harmony patches and live-game bridges
+│   │   ├── Patches.cs     the 7 [HarmonyPatch] adapter classes
+│   │   ├── MoveGate.cs    movability guard the patches consult (reads live grid/persistence)
+│   │   └── SoilCheck.cs   the water/soil placement rule, mirroring the game's own lookup
+│   └── core/              the mod's own logic and diagnostics
+│       ├── Hotkey.cs      key-state helpers for the arming binding
+│       └── Diagnostics.cs opt-in verbose logging
+├── scripts/               repo git-hook shell scripts
+├── docs/                  the living-doc set (prose only)
+├── research/              game-behaviour notes (prose only)
+└── pack.ps1               workspace-synced build/pack script — must stay at the repo root
+```
+
+Folders are a filing convention only: **every type stays in the single flat `Transplant`
+namespace**, because C# does not tie namespaces to directories and renaming them would churn every
+`using` for no gain. Never add a folder-derived namespace here.
+
+**Enforced homes:**
+
+- `src/game/` — Harmony patches and live-game bridges
+- `src/core/` — the mod's own logic, state, input and diagnostics
+- `scripts/` — repo tooling shell scripts (git hooks)
+- `src/Plugin.cs` — BepInEx entry point; must sit beside the `.csproj`
+- `pack.ps1` — workspace-synced build/pack script; must sit at the repo root
+
+There is deliberately no `src/ui/`: Transplant draws no panels or widgets, and the taxonomy says to
+create a folder only when a file belongs in it.
 
 ## Architecture at a glance
 
@@ -24,11 +61,11 @@ They route game events into three small, single-purpose static classes that hold
 state and decisions:
 
 ```
-game decorate events ──▶ Patches.cs ──▶ MoveGate     (may this be picked up / carried?)
-                                    ├──▶ SoilCheck    (may this be put down here?)
-                                    └──▶ Diagnostics  (explain what happened, if asked)
-                          Plugin.cs  = entry point + config/logging
-                          Hotkey.cs  = key-state helpers for the arming binding
+game decorate events ──▶ game/Patches.cs ──▶ game/MoveGate    (pick up / carry?)
+                                         ├──▶ game/SoilCheck   (put down here?)
+                                         └──▶ core/Diagnostics (explain it, if asked)
+                          Plugin.cs      = entry point + config/logging
+                          core/Hotkey.cs = key-state helpers for the arming binding
 ```
 
 The full runtime shape and data flow are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
@@ -38,11 +75,11 @@ The full runtime shape and data flow are in [docs/ARCHITECTURE.md](docs/ARCHITEC
 | Component | Responsibility | Key files | Exposes | Depends on | Seam |
 |---|---|---|---|---|---|
 | **Plugin entry** | Register patches at load; hold config + logging | `src/Plugin.cs` | `TransplantPlugin`, `Plugin` (static config/log) | BepInEx, HarmonyX | add a config entry / a patch class |
-| **Patches** | Bridge game events → mod logic | `src/Patches.cs` | 7 `[HarmonyPatch]` classes | game types, MoveGate, SoilCheck, Diagnostics | add/adjust a hook onto a game method |
-| **Move gate** | Arming/carrying state + "is this a plant we move?" | `src/MoveGate.cs` | `MoveGate` (static) | Plugin config, Hotkey, game persistence | change what counts as movable / arming rules |
-| **Soil check** | The water/soil placement rule | `src/SoilCheck.cs` | `SoilCheck` (static) | game persistence, ItemAsset grow graph | change placement safety logic |
-| **Diagnostics** | Opt-in verbose logging that tells failures apart | `src/Diagnostics.cs` | `Diagnostics` (static) | Plugin.Debug, MoveGate | add/trim a diagnostic line |
-| **Hotkey** | Key-state helpers robust to held movement keys | `src/Hotkey.cs` | `Hotkey` (static) | Unity legacy Input | change key handling |
+| **Patches** | Bridge game events → mod logic | `src/game/Patches.cs` | 7 `[HarmonyPatch]` classes | game types, MoveGate, SoilCheck, Diagnostics | add/adjust a hook onto a game method |
+| **Move gate** | Arming/carrying state + "is this a plant we move?" | `src/game/MoveGate.cs` | `MoveGate` (static) | Plugin config, Hotkey, game persistence | change what counts as movable / arming rules |
+| **Soil check** | The water/soil placement rule | `src/game/SoilCheck.cs` | `SoilCheck` (static) | game persistence, ItemAsset grow graph | change placement safety logic |
+| **Diagnostics** | Opt-in verbose logging that tells failures apart | `src/core/Diagnostics.cs` | `Diagnostics` (static) | Plugin.Debug, MoveGate | add/trim a diagnostic line |
+| **Hotkey** | Key-state helpers robust to held movement keys | `src/core/Hotkey.cs` | `Hotkey` (static) | Unity legacy Input | change key handling |
 
 ## Key flows
 
@@ -59,7 +96,9 @@ The full runtime shape and data flow are in [docs/ARCHITECTURE.md](docs/ARCHITEC
 
 ## Conventions
 
-- Plugin `.cs` flat in `src/`; `pack.ps1` + `Directory.Build.props` at repo root are
+- Code is filed per the [Layout](#layout) contract (`src/Plugin.cs` at the `src/` root, plus
+  `src/game/` and `src/core/`) under one flat `Transplant` namespace; `pack.ps1` +
+  `Directory.Build.props` at repo root are
   **workspace-synced canonicals** — do not hand-edit here (regenerated by `../../tools/sync-mod-files.ps1`).
 - Version bumped in `src/Transplant.csproj` only, at publish time; never hardcode it in `Plugin.cs`.
 - Commit identity: `dirtyredz <dirtyredz@live.com>`.
@@ -69,8 +108,10 @@ The full runtime shape and data flow are in [docs/ARCHITECTURE.md](docs/ARCHITEC
 
 ## Where to find things
 
-- "How does the pickup gate work?" → `src/Patches.cs` (`CanMoveGridViewPatch`) + `src/MoveGate.cs`.
-- "Why won't it place here?" → `src/SoilCheck.cs` + `PlacementPatch`/`ShoutPatch` in `src/Patches.cs`.
+- "How does the pickup gate work?" → `src/game/Patches.cs` (`CanMoveGridViewPatch`) +
+  `src/game/MoveGate.cs`.
+- "Why won't it place here?" → `src/game/SoilCheck.cs` + `PlacementPatch`/`ShoutPatch` in
+  `src/game/Patches.cs`.
 - "What do the config options do?" → `src/Plugin.cs` (`Plugin.Bind`) + [README.md](README.md).
 - "What's still untested / next?" → [docs/BACKLOG.md](docs/BACKLOG.md), [TESTING.md](TESTING.md).
 - "Why is it built this way?" → [docs/DECISIONS.md](docs/DECISIONS.md), [research/](research/).
@@ -79,7 +120,9 @@ The full runtime shape and data flow are in [docs/ARCHITECTURE.md](docs/ARCHITEC
 
 Assessed in the full structural review of **2026-08-22** (componentization + abstraction lenses +
 Codex cross-model pass). This is a small (6-file, ~1.2k-line), **mostly cohesive** codebase — no
-file is near the ~800-line God-class tripwire and 6 files map to 6 genuine responsibilities. All
+file is near the ~800-line God-class tripwire and 6 files map to 6 genuine responsibilities. (That
+review predates the 2026-09-01 move out of a flat `src/` into `src/game/` + `src/core/`, which was a
+pure relocation — no file, type or namespace changed.) All
 findings are **P2** (minor, deferred on a stable published mod); full triage in
 [docs/BACKLOG.md](docs/BACKLOG.md). Headlines:
 

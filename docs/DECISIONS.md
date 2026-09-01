@@ -58,10 +58,14 @@ holds a movement key while walking a row of crops. `Hotkey.cs` checks the main k
 modifiers only. **Rejected:** a shared package — these mods ship as independent DLLs with no common
 dependency, so the file is a deliberate copy of Plant Peek's (see [GOTCHAS.md](GOTCHAS.md)).
 
-## (workspace) — Version single-sourced from csproj; flat `src/` layout
+## (workspace) — Version single-sourced from csproj; `src/{game,core}` layout
 
 Version lives only in `src/Transplant.csproj` `<Version>`, compiled into `ModBuildInfo.Version`;
-never hardcoded in `Plugin.cs`. Sources sit flat in `src/`. Both are workspace conventions — see
+never hardcoded in `Plugin.cs`. Sources are filed in the workspace mod taxonomy — `src/Plugin.cs`
+beside the `.csproj`, `src/game/` for Harmony/live-game code, `src/core/` for the mod's own logic
+(see [../STRUCTURE.md](../STRUCTURE.md) § Layout); they sat flat in `src/` until 2026-09-01.
+Folders file the code but do **not** name it: one flat `Transplant` namespace throughout, since C#
+does not couple the two. Both are workspace conventions — see
 [../../../docs/DECISIONS.md](../../../docs/DECISIONS.md).
 
 _Living doc — refresh with /project-docs when it drifts._

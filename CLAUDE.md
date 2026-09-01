@@ -3,7 +3,8 @@
 How to work in this mod repo. Orientation lives in the doc set — read those, don't duplicate them.
 
 - **[README.md](README.md)** — human quick-start + the design rationale ("why this doesn't exist").
-- **[STRUCTURE.md](STRUCTURE.md)** — where the code lives (6 files in `src/`).
+- **[STRUCTURE.md](STRUCTURE.md)** — where the code lives; its **Layout** section is the binding
+  placement contract (6 `.cs` files under `src/`).
 - **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** — how the patches + gates work at runtime.
 - **[docs/DECISIONS.md](docs/DECISIONS.md) · [FEATURES.md](docs/FEATURES.md) ·
   [GOTCHAS.md](docs/GOTCHAS.md) · [ROADMAP.md](docs/ROADMAP.md) · [BACKLOG.md](docs/BACKLOG.md)**
@@ -28,7 +29,11 @@ release/pack pipeline live in `../../CLAUDE.md`, `../../STRUCTURE.md`, `../../do
 ## Conventions
 
 - Commit identity: `dirtyredz <dirtyredz@live.com>`.
-- Plugin `.cs` flat in `src/` (no `src/Transplant/`).
+- File new code per **[STRUCTURE.md § Layout](STRUCTURE.md#layout)**: `src/Plugin.cs` stays beside
+  the `.csproj`; Harmony patches and live-game bridges go in `src/game/`; the mod's own logic,
+  input and diagnostics in `src/core/`. No `src/ui/` — this mod draws none.
+- **One flat `Transplant` namespace regardless of folder.** Folders file the code; they do not name
+  it. Never add a folder-derived namespace or rewrite a `using`.
 - Read-before-you-code workspace gates: saves → `../../11`; colour → `../../16`; UI → `../../10`/`17`.
 
 ## Structure-review gate
