@@ -46,7 +46,9 @@ namespace**, because C# does not tie namespaces to directories and renaming them
 **Enforced homes:**
 
 - `src/game/` — Harmony patches and live-game bridges
-- `src/core/` — the mod's own logic, state, input and diagnostics
+- `src/core/` — the mod's own logic, input and diagnostics: the files with NO game-type
+  dependency. (Not "state" — the state-heavy `game/MoveGate.cs` and `game/SoilCheck.cs` sit in
+  `game/` because they read live game types, which is the discriminator.)
 - `scripts/` — repo tooling shell scripts (git hooks)
 - `src/Plugin.cs` — BepInEx entry point; must sit beside the `.csproj`
 - `pack.ps1` — workspace-synced build/pack script; must sit at the repo root
@@ -64,9 +66,15 @@ state and decisions:
 game decorate events ──▶ game/Patches.cs ──▶ game/MoveGate    (pick up / carry?)
                                          ├──▶ game/SoilCheck   (put down here?)
                                          └──▶ core/Diagnostics (explain it, if asked)
+                                                   │
+                                                   └──▶ game/MoveGate   ⚠ upward edge
                           Plugin.cs      = entry point + config/logging
                           core/Hotkey.cs = key-state helpers for the arming binding
 ```
+
+⚠ `core/Diagnostics` calls back into `game/MoveGate` (`IsPlayerPlanted`, `Armed`) to explain a
+verdict — a `core` → `game` dependency, the wrong direction. Drawn here rather than omitted, because
+the folder split is what made it visible. Tracked in [docs/BACKLOG.md](docs/BACKLOG.md).
 
 The full runtime shape and data flow are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 

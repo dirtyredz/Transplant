@@ -46,3 +46,11 @@ redundant `VerboseLogging` guard in `CancelPatch` and a stale `PluginVersion` co
       `DecorateSelectStackedState` path tested end to end. Only if requested.
 
 _Living doc — refresh with /project-docs when it drifts._
+
+## Structural follow-up (from the 2026-09-01 structure review)
+
+- **P2 — `core/Diagnostics.cs` depends upward into `game/MoveGate.cs`** (`Diagnostics.Considered` and
+  `Diagnostics.Verdict` call `MoveGate.IsPlayerPlanted` / `MoveGate.Armed`). That is `core` → `game`,
+  the wrong direction. Already tracked as "Diagnostics depends on decision logic"; the folder split
+  is what made the direction visible. STRUCTURE.md's "Architecture at a glance" diagram has been
+  annotated to show the edge instead of implying it does not exist.
