@@ -18,3 +18,4 @@ decompiled/
 # The glob covers the .inflight snapshot a running review claims.
 .structure-review-pending*
 .structure-review-paused
+.docket/
