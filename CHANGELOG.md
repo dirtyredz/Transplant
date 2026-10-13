@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 — 2026-10-12
+
+Compatibility with Moonlight Peaks 1.3.9.
+
+- Fixed moving a planted crop: the game changed how a plant stores its list of growth stages, which broke the check Transplant makes when you pick a crop up.
+
 ## 1.0.0 — 2026-08-04
 
 First release. Move a crop you have already planted, in decorate mode, without losing its

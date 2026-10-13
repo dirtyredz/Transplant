@@ -18,7 +18,7 @@ thumbnail ratio and art direction first — they all still apply.
 | **Name** | Transplant - Move Planted Crops Without Losing Growth |
 | **Summary** (short, shows in listings) | Planted the row slightly wrong? Move it. Crops keep their growth, and they will not let you strand them somewhere they cannot be watered. |
 | **Category** | Gameplay — where Free Decorate, Place Items Diagonally and Walk Through Crops all sit |
-| **Version** | 1.0.0 |
+| **Version** | 1.0.1 |
 | **Nexus page** | [mod 126](https://www.nexusmods.com/moonlightpeaks/mods/126) — live since 2026-08-04 |
 | **Requirements** | BepInEx 5 (win_x64), 5.4.23.5 or newer — required |
 | | [Mod Nook](https://www.nexusmods.com/moonlightpeaks/mods/127) — optional, for in-game settings |
@@ -141,6 +141,14 @@ patch.
 
 Player-facing. Describe the **symptom**, not the cause — the repo README names the Harmony
 patches; that belongs in the repo.
+
+### 1.0.1
+
+```
+Compatibility with Moonlight Peaks 1.3.9.
+
+- Fixed moving a planted crop failing after the game update.
+```
 
 ### 1.0.0
 
